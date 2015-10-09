@@ -43,8 +43,12 @@ InteractiveTrainer.prototype = {
 					zIndex: 2000,
 					top: _x,
 					left: _y,
-					border: "2px solid #000000",
-					padding: "5px 5px 5px 5px" 
+					border: "2px solid #ff0000",
+					background: "rgba(0, 255, 127, 0.3)",
+
+					
+					
+					
 							
 				});
 			
@@ -59,9 +63,9 @@ InteractiveTrainer.prototype = {
 						selfObj.is_selected_element = parseInt($(this).attr('id'));
 						$(this).hide();
 						var x1 = $(this).css('left');
-						x1 = parseInt(x1.substring(0,3))
+						x1 = parseInt(x1)
 						var y1 = $(this).css('top');
-						y1 = parseInt(y1.substring(0,3));
+						y1 = parseInt(y1);
 						var width = $(this).width()
 						var height = $(this).height();
 				
