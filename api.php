@@ -16,7 +16,7 @@ error_log("received request with OP $_REQUEST[op]");
 switch($_REQUEST['op']) {
 case 'identify_objects':
 	$label1 = array('_id' => 1, 'box' => array(array(0,0), array(150,150)), 'tag' => 'chair');
-	$label2 = array('_id' => 2, 'box' => array(array(200,200), array(150,150)), 'tag' => 'car');
+	$label2 = array('_id' => 2, 'box' => array(array(50,50), array(50,50)), 'tag' => 'car');
 
 	$resp = array('_id' => 1, 'labels' => array($label1, $label2) );
 

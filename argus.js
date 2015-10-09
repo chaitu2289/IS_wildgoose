@@ -2,6 +2,7 @@ function InteractiveTrainer(workarea) {
 	this.workarea = $(workarea);
 	this.all_divs = [];
 	this.is_selected_element = -1;
+	this.offset = [];
 /*
 	this.workarea.html(
 '		<div class="col-md-8">'+
@@ -42,26 +43,14 @@ InteractiveTrainer.prototype = {
 					zIndex: 2000,
 					top: _x,
 					left: _y,
-					border: "2px solid black"
+					border: "2px solid #000000",
+					padding: "5px 5px 5px 5px" 
 							
 				});
 			
 				$div.attr("id", i);
 
-/*
-				jQuery(function($) {
-				$('.jc').Jcrop({
- 		 		}, function() {
-					jcrop_api1 = this;
-					});
-				});
-*/
 				var selfObj = this;
-/*
-				$div.mouseover().css({
-						cursor: 'move'
-				});
-*/				
 
 				//var is_selected_element = this.is_selected_element;
 				$div.mousedown(
@@ -72,26 +61,32 @@ InteractiveTrainer.prototype = {
 						var x1 = $(this).css('left');
 						x1 = parseInt(x1.substring(0,3))
 						var y1 = $(this).css('top');
-					y1 = parseInt(y1.substring(0,3));
-					var width = $(this).width()
-					var height = $(this).height();
+						y1 = parseInt(y1.substring(0,3));
+						var width = $(this).width()
+						var height = $(this).height();
 				
-					var x2 = x1 + width;
-					var y2 = y1 + height;
+						var x2 = x1 + width;
+						var y2 = y1 + height;
 				
-					selfObj.jcrop_api.setSelect([x1,y1,x2,y2]);
-					return false;
-				}
+						selfObj.jcrop_api.setSelect([x1,y1,x2,y2]);
+						selfObj.hide_other_elements($(this).attr('id'));
+						return false;
+					}
 	
 				);
 
 				var $img = $('.jcrop-holder');
-			
+				
+				$img.click(function(e) {
+					console.log("mouse position " + e.pageX + e.pageY);
+				});
 				$img.append($div).css({
 					position : 'absolute'
 		    		});
 				this.all_divs.push($div);
 			}
+			
+			
 
 	
 		},
@@ -104,6 +99,7 @@ InteractiveTrainer.prototype = {
 		identify_objects: function(frm) {
 			console.log('identify_objects');
 			console.log(frm);
+			
 			
 			var form = document.getElementById('file-form');
 			var fileSelect = document.getElementById('file-select');
@@ -147,25 +143,43 @@ InteractiveTrainer.prototype = {
 			// send image to api.php using $.ajax POST request with op "identify_objects"
 			//var labels = { _id: "1", labels: [] }; // get labels from ajax result
 			this.activate_jcrop();
+			this.offset[0] = $('.jcrop-holder').offset().left;
+			this.offset[1] = $('.jcrop-holder').offset().top;
 			this.show_image(labels);
 			
-/*
-			for (i=0; i<labels.length; i++) {
-				var x1 = labels[i][1][0];
-				var y1 = labels[i][1][1]; 
-				var width = labels[i][1][2];
-				var height = labels[i][1][3];
-		
+			var $img = $('.jcrop-holder');
+			var selfObj = this;
+			this.update_z_values();
+
+			
+		},
+
+		update_z_values: function() {
+			for (var i=0; i<this.all_divs.length; i++) {
+				var outer_div = this.all_divs[i];
+				var outer_div_x = parseInt(outer_div.css('left'));
+				var outer_div_y = parseInt(outer_div.css('top'));
+				var outer_div_width = outer_div.width();
+				var outer_div_height = outer_div.height();
+				var outer_last_corner_x = outer_div_x + outer_div_width;
+				var outer_last_corner_y = outer_div_y + outer_div_height;
+				for (var j=0; j<this.all_divs.length; j++) {
+					if (i!= j) {
+						var inner_div = this.all_divs[j];
+						var inner_div_x = parseInt(inner_div.css('left'));
+						var inner_div_y = parseInt(inner_div.css('top'));
+						var inner_div_width = inner_div.width();
+						var inner_div_height = inner_div.height();
+						var inner_last_corner_x = inner_div_x + inner_div_width;
+						var inner_last_corner_y = inner_div_y + inner_div_height;
+						if ((outer_div_x < inner_div_x) && (outer_div_y < inner_div_y) && (outer_last_corner_x > inner_last_corner_x) && (outer_last_corner_y > inner_last_corner_y)) {
+							inner_div.css('z-index', outer_div.css('z-index') + 1);
+							//console.log(parseInt(inner_div.css("z-index")) + 1);
+						} 
 				
-					var x2 = x1 + width;
-					var y2 = y1 + height;
-				
-					jcrop_api.setSelect([x1,y1,x2,y2]);
-					return false;
+					}					
+				}
 			}
-*/
-			
-			
 
 		},
 
@@ -179,6 +193,42 @@ InteractiveTrainer.prototype = {
 					self_obj.jcrop_api = this;
 				});
 			});
+		},
+	
+		hide_other_elements: function(index) {
+
+			var outer_div = this.all_divs[index];
+			var outer_div_x = parseInt(outer_div.css('left'));
+			var outer_div_y = parseInt(outer_div.css('top'));
+			var outer_div_width = outer_div.width();
+			var outer_div_height = outer_div.height();
+			var outer_last_corner_x = outer_div_x + outer_div_width;
+			var outer_last_corner_y = outer_div_y + outer_div_height;
+			for (var i=0; i < this.all_divs.length; i++) {
+
+				if (i!= index) {
+					var inner_div = this.all_divs[i];
+					var inner_div_x = parseInt(inner_div.css('left'));
+					var inner_div_y = parseInt(inner_div.css('top'));
+					var inner_div_width = inner_div.width();
+					var inner_div_height = inner_div.height();
+					var inner_last_corner_x = inner_div_x + inner_div_width;
+					var inner_last_corner_y = inner_div_y + inner_div_height;
+					if ((outer_div_x > inner_div_x) && (outer_div_y > inner_div_y) && (outer_last_corner_x < inner_last_corner_x) && (outer_last_corner_y < inner_last_corner_y)) {
+						inner_div.hide();
+						} 
+				
+						
+
+					if (((outer_div_x < inner_div_x < outer_last_corner_x) && (outer_div_y < inner_div_y < outer_last_corner_y)) || ((outer_div_x < inner_div_x + inner_div_width < outer_last_corner_x) && (outer_div_y < inner_div_y < outer_last_corner_y)) || ((outer_div_x < inner_div_x < outer_last_corner_x) && (outer_div_y < inner_div_y + inner_div_height < outer_div_last_corner_y)) || ((outer_div_x < inner_div_x + inner_div_width < outer_last_corner_x) && (outer_div_y < inner_div_y + inner_div_height < outer_div_last_corner_y)))    {
+				
+
+						inner_div.hide();			
+				
+					}
+				}
+			}
+			
 		}
 
 };
@@ -190,6 +240,8 @@ function start() {
 		e.preventDefault();
 		it.identify_objects(this);
 	});
+
+	
 	$('#crop').click(function(e) {
 		console.log(it.is_selected_element);
 		//for(j=0; j<it.all_divs.length; j++) {
@@ -203,12 +255,16 @@ function start() {
 				new_y1 = new_coordinates.y;
 				new_y2 = new_coordinates.y2;
 				it.all_divs[it.is_selected_element].width(new_w).height(new_h).css({
-					top: new_x1,
-					left: new_y1
+					top: new_y1,
+					left: new_x1
 				})
 				it.all_divs[it.is_selected_element].show()
 				it.is_selected_element = -1
 				it.jcrop_api.release();
+				it.update_z_values();
+				for (var i=0; i < it.all_divs.length; i++) {	
+					it.all_divs[i].show();
+				}
 				return false;
 
 			}
@@ -232,10 +288,10 @@ function start() {
 							
 				});
 			
-				$div.attr("id", it.all_divs.length+1);
+				$div.attr("id", it.all_divs.length);
 
 
-				var selfObj = this;
+				//var selfObj = this;
 /*
 				$div.mouseover().css({
 						cursor: 'move'
@@ -246,19 +302,20 @@ function start() {
 				$div.mousedown(
 
 					function(e){
-						selfObj.is_selected_element = parseInt($(this).attr('id'));
+						it.is_selected_element = parseInt($(this).attr('id'));
 						$(this).hide();
 						var x1 = $(this).css('left');
-						x1 = parseInt(x1.substring(0,3))
+						x1 = parseInt(x1)
 						var y1 = $(this).css('top');
-					y1 = parseInt(y1.substring(0,3));
+					y1 = parseInt(y1);
 					var width = $(this).width()
 					var height = $(this).height();
 				
 					var x2 = x1 + width;
 					var y2 = y1 + height;
 				
-					selfObj.jcrop_api.setSelect([x1,y1,x2,y2]);
+					it.jcrop_api.setSelect([x1,y1,x2,y2]);
+					it.hide_other_elements($(this).attr('id'));
 					return false;
 				}
 	
@@ -273,8 +330,12 @@ function start() {
 				it.jcrop_api.release();
 				return false;
 			}	
+
+			
 		//}
 	})
+
+	
 
 	$('#updatebtn').on('click', this.learn_features);
 }

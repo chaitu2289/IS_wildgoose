@@ -21,7 +21,7 @@
 		<button type="button" id="crop" >Crop</button>
 	</form>
 
-<img src=""  alt="Image preview..." id="target"> 	
+	<img src=""  alt="Image preview..." id="target"> 	
 
 
 
