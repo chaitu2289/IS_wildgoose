@@ -45,15 +45,13 @@ InteractiveTrainer.prototype = {
 					left: _y,
 					border: "2px solid #ff0000",
 					background: "rgba(0, 255, 127, 0.3)",
-
-					
-					
 					
 							
 				});
 			
 				$div.attr("id", i);
-
+				$div.append("<p>"+labels[i][2]+"</p>")
+				console.log("Pringint labels " + labels[i]);
 				var selfObj = this;
 
 				//var is_selected_element = this.is_selected_element;
@@ -120,7 +118,7 @@ InteractiveTrainer.prototype = {
 			xhr.onload = function () {
 				if (xhr.status === 200) {
 					console.log(xhr.responseText);
-					response = JSON.stringify(eval("(" + JSON.parse(xhr.responseText) +  ")")) ;
+					response =  JSON.parse(xhr.responseText) ;
 					//console.log(response)
 					//var _id = response._id;
 					//var label1 = response.labels.label1._id;
@@ -135,15 +133,15 @@ InteractiveTrainer.prototype = {
 			
 
 			
-			console.log(typeof(response));
 			var _id = response._id;
 			var _labels = response.labels;
 			for (i=0; i<_labels.length; i++) {
 				var label_id = _labels[i]._id;
 				var box = _labels[i].box[0].concat(_labels[i].box[1]);
+				var tag = _labels[i].tag;
 				//item["label_id"] = label_id;
 				//item["box"] = box;
-				labels.push([label_id, box]);
+				labels.push([label_id, box, tag]);
 			}
 			
 		
