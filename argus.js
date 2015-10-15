@@ -119,7 +119,9 @@ InteractiveTrainer.prototype = {
 
 			xhr.onload = function () {
 				if (xhr.status === 200) {
-					response = JSON.parse(xhr.responseText);
+					console.log(xhr.responseText);
+					response = JSON.stringify(eval("(" + JSON.parse(xhr.responseText) +  ")")) ;
+					//console.log(response)
 					//var _id = response._id;
 					//var label1 = response.labels.label1._id;
 		    			// File(s) uploaded.
@@ -133,6 +135,7 @@ InteractiveTrainer.prototype = {
 			
 
 			
+			console.log(typeof(response));
 			var _id = response._id;
 			var _labels = response.labels;
 			for (i=0; i<_labels.length; i++) {
@@ -288,7 +291,8 @@ function start() {
 					zIndex: 2000,
 					left: _x,
 					top: _y,
-					border: "2px solid black"
+					border: "2px solid #ff0000",
+					background: "rgba(0, 255, 127, 0.3)",
 							
 				});
 			
@@ -332,6 +336,7 @@ function start() {
 		    		});
 				it.all_divs.push($div);
 				it.jcrop_api.release();
+				it.update_z_values();
 				return false;
 			}	
 
