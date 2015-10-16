@@ -10,6 +10,11 @@
 	<script src="Jcrop/js/jquery.Jcrop.min.js"></script>
 	<link rel="stylesheet" href="Jcrop/css/jquery.Jcrop.css" type="text/css" />
 	<title>Interactive Trainer - Argus</title>
+	<style>
+		p {
+			color:Maroon;
+		}
+	</style>
 </head>
 <body>
 
@@ -19,6 +24,7 @@
 		<input type="file" id="file-select" onchange="previewFile()" name="test_image"><br>
 		<button type="button" id="upload-button" >Show Objects</button>
 		<button type="button" id="crop" >Crop</button>
+		<br> Object label: <input type="text" id="tag"  name="firstname"><br>
 	</form>
 
 	<img src=""  alt="Image preview..." id="target"> 	

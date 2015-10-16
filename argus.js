@@ -252,7 +252,7 @@ function start() {
 		
 		//for(j=0; j<it.all_divs.length; j++) {
 			if (it.is_selected_element >= 0) {
-			
+				console.log('it is selected element');	
 				new_coordinates = it.jcrop_api.tellSelect();
 				new_h = new_coordinates.h;
 				new_w = new_coordinates.w;
@@ -260,6 +260,10 @@ function start() {
 				new_x2 = new_coordinates.x2
 				new_y1 = new_coordinates.y;
 				new_y2 = new_coordinates.y2;
+				if (it.all_divs[it.is_selected_element].text() !=  $('#tag').val()) {
+					it.all_divs[it.is_selected_element].text(($('#tag').val()));
+				}
+				console.log(it.all_divs[it.is_selected_element].text());
 				it.all_divs[it.is_selected_element].width(new_w).height(new_h).css({
 					top: new_y1,
 					left: new_x1
@@ -271,6 +275,7 @@ function start() {
 				for (var i=0; i < it.all_divs.length; i++) {	
 					it.all_divs[i].show();
 				}
+				$("tag").val("");
 				return false;
 
 			}
@@ -284,7 +289,7 @@ function start() {
 				_y2 = new_coordinates.y2;
 			
 				
-		
+				$tag = $('#tag').val();
 				var $div = $('<div />').width(_w).height(_h).css({
 					position: 'absolute',
 					zIndex: 2000,
@@ -294,6 +299,7 @@ function start() {
 					background: "rgba(0, 255, 127, 0.3)",
 							
 				});
+				$div.append("<p>"+$tag+"</p>")
 			
 				$div.attr("id", it.all_divs.length);
 
@@ -337,7 +343,7 @@ function start() {
 				it.jcrop_api.release();
 				it.update_z_values();
 				return false;
-			}	
+			}
 
 			
 		//}
