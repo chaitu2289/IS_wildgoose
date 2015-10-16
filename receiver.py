@@ -21,6 +21,6 @@ class Receiver:
 		image = body
 		#I = array(Image.open(image));
 		response = deep_learning("I")
-		ch.basic_publish(exchange='', routing_key=props.reply_to, properties=pika.BasicProperties(correlation_id =  props.correlation_id), body=str(response))
+		ch.basic_publish(exchange='', routing_key=props.reply_to, properties=pika.BasicProperties(correlation_id =  props.correlation_id),  body=str(response))
 		ch.basic_ack(delivery_tag=method.delivery_tag)
 

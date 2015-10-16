@@ -117,7 +117,7 @@ InteractiveTrainer.prototype = {
 
 			xhr.onload = function () {
 				if (xhr.status === 200) {
-					console.log(xhr.responseText);
+					//console.log(xhr.responseText);
 					response =  JSON.parse(xhr.responseText) ;
 					//console.log(response)
 					//var _id = response._id;
@@ -249,6 +249,7 @@ function start() {
 	
 	$('#crop').click(function(e) {
 		console.log(it.is_selected_element);
+		
 		//for(j=0; j<it.all_divs.length; j++) {
 			if (it.is_selected_element >= 0) {
 			

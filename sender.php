@@ -19,7 +19,7 @@ class Sender {
 		$this->response = null;
 		$this->corr_id = uniqid();
 		
-		$msg = new AMQPMessage($message, array('correlation_id' => $this->corr_id, 'reply_to' => $callback_queue));
+		$msg = new AMQPMessage($message, array('correlation_id' => $this->corr_id, 'reply_to' => $callback_queue, 'content_type'=>"application/json"));
 		$channel->basic_publish($msg, '', 'argus_queue_');
 		
 		while (!$this->response) {

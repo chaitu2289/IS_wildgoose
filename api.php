@@ -23,13 +23,16 @@ switch($_REQUEST['op']) {
 case 'identify_objects':
 	$image = $_FILES['test_image']['tmp_name'];
 	$simple_sender = new Sender();
-	//$resp = $simple_sender->execute($image);
+	$resp = $simple_sender->execute($image);
+	$resp = json_decode($resp);
+	//var_dump(gettype(json_decode($resp)));
+	//var_dump(json_decode($resp));
 	//var_dump(json_encode($resp));
 	//echo " [x] Image sent\n";	
-	$label1 = array('_id' => 1, 'box' => array(array(0,0), array(150,150)), 'tag' => 'chair');
-	$label2 = array('_id' => 2, 'box' => array(array(50,50), array(50,50)), 'tag' => 'car');
+	//$label1 = array('_id' => 1, 'box' => array(array(0,0), array(150,150)), 'tag' => 'chair');
+	//$label2 = array('_id' => 2, 'box' => array(array(50,50), array(50,50)), 'tag' => 'car');
 
-	$resp = array('_id' => 1, 'labels' => array($label1, $label2) );
+	//$resp = array('_id' => 1, 'labels' => array($label1, $label2) );
 
 	break;
 case 'learn_features':
