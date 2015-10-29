@@ -252,7 +252,6 @@ function start() {
 		
 		//for(j=0; j<it.all_divs.length; j++) {
 			if (it.is_selected_element >= 0) {
-				console.log('it is selected element');	
 				new_coordinates = it.jcrop_api.tellSelect();
 				new_h = new_coordinates.h;
 				new_w = new_coordinates.w;
@@ -351,7 +350,7 @@ function start() {
 
 	
 
-	$('#updatebtn').on('click', this.learn_features);
+	//$('#learn_features').on('click', this.learn_features);
 }
 
 function previewFile() {
