@@ -12,7 +12,7 @@ class Sender {
 	
 
 	public function execute($message) {
-		$connection = new AMQPStreamConnection('localhost', 5672, 'guest', 'guest');
+		$connection = new AMQPStreamConnection('', 5672, 'guest', 'guest');
 		$channel = $connection->channel();
 		list($callback_queue, ,) = $channel->queue_declare('', false, false, true, false);
 		$channel->basic_consume($callback_queue, '', false, false, false, false, array($this, 'onResponse'));
