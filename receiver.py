@@ -23,11 +23,10 @@ class Receiver:
 		credentials = pika.PlainCredentials('guest', 'guest')
 		connection = pika.BlockingConnection(pika.ConnectionParameters('130.245.168.168', 5672, '/',credentials))
 		#connection = pika.BlockingConnection(pika.ConnectionParameters('', 5672, '/',credentials))
-		print dir(connection)
 		channel = connection.channel()
-		channel.queue_declare(queue='argus_queue_')
+		channel.queue_declare(queue='_argus_queue')
 		channel.basic_qos(prefetch_count=1)
-		channel.basic_consume(self.on_request, queue='argus_queue_')
+		channel.basic_consume(self.on_request, queue='_argus_queue')
 		channel.start_consuming()
 
 	def on_request(self, ch, method, props, body):
