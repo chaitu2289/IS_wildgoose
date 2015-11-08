@@ -5,17 +5,19 @@ from os.path import join, dirname, abspath
 ROOT = dirname(abspath(__file__))
 import pika
 import sys
-sys.path.insert(0, join(ROOT, '..'))
-print sys.path
-from detect_image import * 
+#sys.path.insert(0, join(ROOT, '..'))
+#from detect_image import *
+sys.path.insert(0,join(ROOT, '../../py-faster-rcnn/tools'))
+from chaitu_detect_objects import *
+
 #import Image
 import numpy as np
+from PIL import Image
 #from pylab import *
 #matplotlib.use('Agg')
 from image_processing import *
 #from caffe_IS.detect_image import *
-import json
-
+from jaweson import json
  
 class Receiver:
 
@@ -30,27 +32,37 @@ class Receiver:
 		channel.start_consuming()
 
 	def on_request(self, ch, method, props, body):
+		image = json.loads(body)
+                image_name = image["image_path"]
+                im = image["image"]
+		img = Image.fromarray(im)
+
 		ROOT = dirname(abspath(__file__))
-		image = body
+		#image = body
 		image_store_dir = join(ROOT, '../examples/images')
 		caffe_input_file = join(ROOT, '../_temp/det_input.txt')
 		
 		#copies uploaded image to destination folder
-		cmd = join('scp root@130.245.168.168:')
-        	cmd += image + ' '
-        	cmd += image_store_dir
-		system(cmd)
+		#cmd = join('scp root@130.245.168.168:')
+        	#cmd += image + ' '
+        	#cmd += image_store_dir
+		#system(cmd)
 
-		
-		image_file_path = image_store_dir + '/' + image.split('/')[-1] +  ' > ' +  caffe_input_file
+		image_file_path = image_store_dir + '/' + image_name.split('/')[-1]+'.jpg'
+		img.save(image_file_path)
 		cmd1 = 'echo ' + image_file_path + ' > ' + caffe_input_file
 		system(cmd1)
 		
-		print image
-		#I = array(Image.open(image));
+		#print image
+		#dummy response
 		#response = deep_learning("I")
-		caffe_output_file = join(ROOT, '../_temp/_output.h5')
-		response = detect(caffe_input_file , caffe_output_file)	
+
+		#Using RCNN detector
+		#caffe_output_file = join(ROOT, '../_temp/_output.h5')
+		#response = detect(caffe_input_file , caffe_output_file)	
+	
+		#Using Faster RCNN Detector
+		response = detect_objects(image_file_path)
 		print response
 			
 		ch.basic_publish(exchange='', routing_key=props.reply_to, properties=pika.BasicProperties(correlation_id =  props.correlation_id),  body=str(response))
