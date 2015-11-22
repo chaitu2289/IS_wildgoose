@@ -9,7 +9,7 @@ import sys
 #from detect_image import *
 sys.path.insert(0,join(ROOT, '../../py-faster-rcnn/tools'))
 from chaitu_detect_objects import *
-
+from create_xml import *
 #import Image
 import numpy as np
 from PIL import Image
@@ -33,9 +33,16 @@ class Receiver:
 
 	def on_request(self, ch, method, props, body):
 		image = json.loads(body)
+		if "operation" in image:
+			operation = image["operation"]
                 image_name = image["image_path"]
+
                 im = image["image"]
+		[height, width, depth] = im.shape
+
 		img = Image.fromarray(im)
+		#[height, width, depth] = img.shape
+		#print height, width, depth
 
 		ROOT = dirname(abspath(__file__))
 		#image = body
@@ -62,9 +69,18 @@ class Receiver:
 		#response = detect(caffe_input_file , caffe_output_file)	
 	
 		#Using Faster RCNN Detector
-		response = detect_objects(image_file_path)
-		print response
+		if operation == "identify_objects":
+			response = detect_objects(image_file_path)
+			print response
+		elif operation == "learn_features":
+			data = image["data"]
+			image_id = data["image_id"]
+			labels = data["labels"]
+			image_shape = [height, width, depth]
+			response = create_xml(image_id, labels, image_shape)
+			print response
 			
 		ch.basic_publish(exchange='', routing_key=props.reply_to, properties=pika.BasicProperties(correlation_id =  props.correlation_id),  body=str(response))
 		ch.basic_ack(delivery_tag=method.delivery_tag)
+
 
