@@ -35,7 +35,22 @@ class Receiver:
 		image = json.loads(body)
 		if "operation" in image:
 			operation = image["operation"]
-                image_name = image["image_path"]
+		if operation == "learn_features":
+			cmd = "cd /var/services/homes/kchakka/py-faster-rcnn"
+			system(cmd)
+                        print "Operation is learn_features"
+                        net_name = "VGG16"
+                        weights = "/var/services/homes/kchakka/py-faster-rcnn/data/faster_rcnn_models/VGG16_faster_rcnn_final.caffemodel"
+                        imdb = "voc_2007_train"
+                        train_script = "/var/services/homes/kchakka/py-faster-rcnn/tools/train_faster_rcnn_alt_opt.py"
+                        cmd1 = "python " + train_script + " --net_name=" + net_name + " --weights=" + weights + " --imdb=" + imdb
+                        system(cmd1)
+                        print "Training the network"
+			cmd = "cd /var/services/homes/kchakka/caffe/argus"
+			system(cmd)
+
+		if "image_path" in image:
+                	image_name = image["image_path"]
 
                 im = image["image"]
 		[height, width, depth] = im.shape
@@ -72,12 +87,18 @@ class Receiver:
 		if operation == "identify_objects":
 			response = detect_objects(image_file_path)
 			print response
-		elif operation == "learn_features":
+		elif operation == "save":
 			data = image["data"]
 			image_id = data["image_id"]
 			labels = data["labels"]
 			image_shape = [height, width, depth]
-			response = create_xml(image_id, labels, image_shape)
+			save_path = "/var/services/homes/kchakka/py-faster-rcnn/VOCdevkit/VOC2007/Annotations"
+			response = create_xml(image_id, labels, image_shape, save_path)
+			fast_rcnn_imagedb = "/var/services/homes/kchakka/py-faster-rcnn/VOCdevkit/VOC2007/JPEGImages/" + response+".jpg"
+			img.save(fast_rcnn_imagedb)
+			rcnn_image_file_path = "/var/services/homes/kchakka/py-faster-rcnn/VOCdevkit/VOC2007/ImageSets/Main/train.txt"  
+			cmd1 = 'echo ' + response + '>>' + rcnn_image_file_path
+			system(cmd1)
 			print response
 			
 		ch.basic_publish(exchange='', routing_key=props.reply_to, properties=pika.BasicProperties(correlation_id =  props.correlation_id),  body=str(response))
