@@ -49,31 +49,34 @@ class Receiver:
 			cmd = "cd /var/services/homes/kchakka/caffe/argus"
 			system(cmd)
 
+		ROOT = dirname(abspath(__file__))
+		image_store_dir = join(ROOT, '../examples/images')
+                caffe_input_file = join(ROOT, '../_temp/det_input.txt')
+
 		if "image_path" in image:
                 	image_name = image["image_path"]
+			image_file_path = image_store_dir + '/' + image_name.split('/')[-1]+'.jpg'
+                	cmd1 = 'echo ' + image_file_path + ' > ' + caffe_input_file
+                	system(cmd1)
 
-                im = image["image"]
-		[height, width, depth] = im.shape
+                if "image" in image:
+			im = image["image"]
+			[height, width, depth] = im.shape
 
-		img = Image.fromarray(im)
+			img = Image.fromarray(im)
+			img.save(image_file_path)
 		#[height, width, depth] = img.shape
 		#print height, width, depth
 
-		ROOT = dirname(abspath(__file__))
-		#image = body
-		image_store_dir = join(ROOT, '../examples/images')
-		caffe_input_file = join(ROOT, '../_temp/det_input.txt')
-		
-		#copies uploaded image to destination folder
 		#cmd = join('scp root@130.245.168.168:')
         	#cmd += image + ' '
         	#cmd += image_store_dir
 		#system(cmd)
 
-		image_file_path = image_store_dir + '/' + image_name.split('/')[-1]+'.jpg'
-		img.save(image_file_path)
-		cmd1 = 'echo ' + image_file_path + ' > ' + caffe_input_file
-		system(cmd1)
+		#image_file_path = image_store_dir + '/' + image_name.split('/')[-1]+'.jpg'
+		#img.save(image_file_path)
+		#cmd1 = 'echo ' + image_file_path + ' > ' + caffe_input_file
+		#system(cmd1)
 		
 		#print image
 		#dummy response
