@@ -1,6 +1,10 @@
 import xml.etree.cElementTree as ET
 from listdir import *
 
+"""
+This file creates an xml file in PASCAL VOC format describing the image
+Example format of the xml file : Refer "009963.xml" in this repo
+"""
 
 def create_file(xmin, ymin, xmax, ymax, tag, image_shape, save_path):
 	root = ET.Element("annotation")
@@ -39,6 +43,10 @@ def create_file(xmin, ymin, xmax, ymax, tag, image_shape, save_path):
 		ET.SubElement(bbox, "xmax").text = str(xmax[i])
 		ET.SubElement(bbox, "ymin").text = str(ymin[i])
 		ET.SubElement(bbox, "ymax").text = str(ymax[i])
+	"""
+	Generate file name for .xml format. File name contains 6 digits denotes the rank of the file 
+        in the training set. Eg: "009963.xml" is the 9963th file in the training set
+	"""
 	_id = str(get_id())
 	file_name_length = len(str(get_id()))
 	num_zeros = 6 - file_name_length
@@ -52,6 +60,21 @@ def create_file(xmin, ymin, xmax, ymax, tag, image_shape, save_path):
 	return file_name
 
 def create_xml(image_id, labels, image_shape, save_path):
+"""
+Arguments
+
+image_id - Currently not using image_id
+labels   - All user annotated labels which are in the format
+[
+  {
+    _id : "1"	
+    box : [[x_min, y_min], [width, height]]
+    label : chair
+  }
+]
+image_shape - dimensions of the image size
+save_path - store the xml in the training data set in py-faster-rcnn
+"""
 	x_min = []
 	y_min = []
 	x_max = []
@@ -69,6 +92,3 @@ def create_xml(image_id, labels, image_shape, save_path):
 		print tag
 	file_name = create_file(x_min, y_min, x_max, y_max, tag, image_shape, save_path)
 	return file_name
-	
-		#print [(x_min, y_min), (x_max, y_max) ]
-		#print "labels", labels[0]
