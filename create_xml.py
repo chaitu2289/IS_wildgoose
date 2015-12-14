@@ -60,7 +60,7 @@ def create_file(xmin, ymin, xmax, ymax, tag, image_shape, save_path):
 	return file_name
 
 def create_xml(image_id, labels, image_shape, save_path):
-"""
+	'''
 Arguments
 
 image_id - Currently not using image_id
@@ -74,7 +74,7 @@ labels   - All user annotated labels which are in the format
 ]
 image_shape - dimensions of the image size
 save_path - store the xml in the training data set in py-faster-rcnn
-"""
+	'''
 	x_min = []
 	y_min = []
 	x_max = []
