@@ -15,7 +15,7 @@ def create_file(xmin, ymin, xmax, ymax, tag, image_shape, save_path):
         zeros = ""
         for i in range(num_zeros):
                 zeros = zeros + "0"
-        file_name = zeros + _id
+        file_name = zeros + file_name
 	ET.SubElement(root, "filename").text = file_name + ".jpg"
 	
 	source = ET.SubElement(root, "source")
