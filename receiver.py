@@ -43,20 +43,6 @@ class Receiver:
 		#gets the api call
 		if "operation" in image:
 			operation = image["operation"]
-#		if operation == "learn_features":
-#			#cmd = "cd /var/services/homes/kchakka/py-faster-rcnn"
-#			#system(cmd)
-#                        print "Operation is learn_features"
-#                        net_name = "VGG16"
-#                        weights = "/var/services/homes/kchakka/py-faster-rcnn/data/faster_rcnn_models/VGG16_faster_rcnn_final.caffemodel"
-#                        imdb = "voc_2007_train"
-#                        train_script = "/var/services/homes/kchakka/py-faster-rcnn/tools/train_faster_rcnn_alt_opt.py"
-#                        cmd1 = "python " + train_script + " --net_name=" + net_name + " --weights=" + weights + " --imdb=" + imdb
-#                        system(cmd1)
-#                        print "Training the network"
-#			#cmd = "cd /var/services/homes/kchakka/caffe/argus"
-#			#system(cmd)
-#			response = "Training done"
 
 		ROOT = dirname(abspath(__file__))
 		image_store_dir = join(ROOT, '../examples/images')
